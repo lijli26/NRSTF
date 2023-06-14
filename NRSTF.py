@@ -91,7 +91,6 @@ def kernal_cal(D_L1, D_M1, D_M2, s):
 
     for i in range(s, h - s):
         for j in range(s, w - s):
-            # sub_DL1 = D_L1_padding[i-s:i+s+1,j-s:j+s+1]
             sub_DM1 = D_M1_padding[i - s:i + s + 1, j - s:j + s + 1]
             ipt[idx] = sub_DM1.reshape((2 * s + 1) ** 2, )
 
@@ -105,8 +104,7 @@ def kernal_cal(D_L1, D_M1, D_M2, s):
     D_M2_padding = reverse_padding(D_M2, s)
     for i in range(s, h - s):
         for j in range(s, w - s):
-            # cof = reg.coef_
-            # print(cof)
+
             sub_DM2 = D_M2_padding[i - s:i + s + 1, j - s:j + s + 1]
 
             m1_2b[i, j] = np.sum(sub_DM2.reshape((2 * s + 1) ** 2, ) * reg.coef_) + reg.intercept_
@@ -138,18 +136,15 @@ def Run():
 
     IO.imsave(segmentation(P_m1, r), r'G:\P_m1.tif', 'float')
 
-    P_m2 = D_M2 +0
-    Noise1 = kernal_cal(abs(P_m1[4 ] -D_M1[4]), D_M1[4] ,D_M2[4] ,5)
-    Noise2 = kernal_cal(abs(P_m1[5 ] -D_M1[5]), D_M1[5] ,D_M2[5] ,4)
+    P_m2 = D_M2 + 0
+    Noise1 = kernal_cal(abs(P_m1[4] -D_M1[4]), D_M1[4] ,D_M2[4] ,5)
+    Noise2 = kernal_cal(abs(P_m1[5] -D_M1[5]), D_M1[5] ,D_M2[5] ,4)
 
     IO.imsave(Noise1[0], r'G:\Noise1.tif', 'float')
     IO.imsave(Noise2[0], r'G:\Noise2.tif', 'float')
 
-    P_m2[4] = D_M2[4 ] -Noise1
-    P_m2[5] = D_M2[5 ] -Noise2
-
-    P_m2[4] = P_m2[4] / np.sum(P_m2[4]) * np.sum(D_M2[4] )
-    P_m2[5] = P_m2[5] / np.sum(P_m2[5]) * np.sum(D_M2[5] )
+    P_m2[4] = D_M2[4] -Noise1
+    P_m2[5] = D_M2[5] -Noise2
 
     IO.imsave(segmentation(P_m2, r), r'G:\P_m2.tif', 'float')
 

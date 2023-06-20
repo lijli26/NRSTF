@@ -136,12 +136,24 @@ def Run():
 
     IO.imsave(segmentation(P_m1, r), r'G:\P_m1.tif', 'float')
 
+    for k in range(20):
+        N_m1 = D_M1+0
+
+        Noise1 = kernal_cal(abs(N_m1[4]-D_M1[4]), D_M1[4],D_M1[4],k+1)
+        Noise2 = kernal_cal(abs(N_m1[5]-D_M1[5]), D_M1[5],D_M1[5],k+1)
+
+        N_m1[4] = D_M1[4]-Noise1
+        N_m1[5] = D_M1[5]-Noise2
+
+        N_m1[4] = N_m1[4] / np.sum(N_m1[4]) * np.sum(D_M1[4])
+        N_m1[5] = N_m1[5] / np.sum(N_m1[5]) * np.sum(D_M1[5])
+
+        print(k+1)
+        print(np.average(abs(N_m1[4]-D_L1[4])**2),np.average(abs(N_m1[5]-D_L1[5])**2))
+    
     P_m2 = D_M2 + 0
     Noise1 = kernal_cal(abs(P_m1[4] -D_M1[4]), D_M1[4] ,D_M2[4] ,5)
     Noise2 = kernal_cal(abs(P_m1[5] -D_M1[5]), D_M1[5] ,D_M2[5] ,4)
-
-    IO.imsave(Noise1[0], r'G:\Noise1.tif', 'float')
-    IO.imsave(Noise2[0], r'G:\Noise2.tif', 'float')
 
     P_m2[4] = D_M2[4] -Noise1
     P_m2[5] = D_M2[5] -Noise2
